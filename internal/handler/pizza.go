@@ -1,10 +1,12 @@
 package handler
 
+import "C"
 import (
 	"fmt"
 	"net/http"
 	"pizzaria/internal/data"
 	"pizzaria/internal/models"
+	"pizzaria/internal/service"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +25,12 @@ func UpdatePizzaById(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	if err := service.ValidatePizzaPrice(&updatePizza); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
 	fmt.Println("UPDATEPIZZA: ", updatePizza)
 
 	for i, pizza := range data.Pizzas {
@@ -80,6 +88,12 @@ func PostPizzas(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	if err := service.ValidatePizzaPrice(&newPizza); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"erro": err.Error()})
+		return
+	}
+
 	newPizza.ID = len(data.Pizzas) + 1
 	data.Pizzas = append(data.Pizzas, newPizza)
 	data.SavePizza()

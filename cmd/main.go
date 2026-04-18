@@ -13,12 +13,9 @@ func main() {
 	router.GET("/pizzas", handler.GetPizzas)
 	router.POST("/pizzas", handler.PostPizzas)
 	router.GET("/pizzas/:id", handler.GetPizzasByID)
-
-	//Deletar uma pizza
 	router.DELETE("/pizzas/:id", handler.DeletePizzaById)
-	//Editar ou atualizar uma pizza
 	router.PUT("/pizzas/:id", handler.UpdatePizzaById)
-	//Excluir uma pizza
+	router.POST("/pizzas/:id/reviews", handler.PostReview)
 
 	err := router.Run()
 	if err != nil {
